@@ -10,4 +10,3 @@ def sqrtmine(x, i):
 
 print(sqrtmine(x, i));
 print(2**0.5);
-#teste
