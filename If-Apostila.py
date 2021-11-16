@@ -22,6 +22,7 @@ else:
 
 print(f"O preço do produto é: R$ {preco}");
 """
+
 #Primeira Tarefa
 """
 categoria = int(input("Digite a categoria do produto: "));
@@ -47,6 +48,7 @@ else:
 if preco:
     print(f"O preço do produto é: R$ {preco}");
 """
+
 #Segunda Tarefa - v1
 #"""
 categoria = int(input("Digite a categoria do produto: "));
