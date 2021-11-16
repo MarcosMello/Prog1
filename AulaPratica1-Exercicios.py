@@ -25,7 +25,7 @@ print("Para um raio " + str(r) + ", o volume é", v, "e a area é", a, ".");
 """
 
 #""" #Exercicio 3 - v1 -> Mais Preciso
-segr = int(input("Digite os segundos: "));
+segr = seg = int(input("Digite os segundos: "));
 
 horas = segr // 3600;
 segr -= horas * 3600;
@@ -38,10 +38,10 @@ segundos = segr;
 print(horas, ":", minutos, ":", segundos);
 #"""
 
-""" #Exercicio 3 - v2
-segr = int(input("Digite os segundos: "));
+""" #Exercicio 3 - v2 -> Menos Preciso
+seg = int(input("Digite os segundos: "));
 
-horas = segr / 3600;
+horas = seg / 3600;
 minutos = ((horas - int(horas)) * 3600) / 60;
 segundos = ((minutos - int(minutos)) * 60);
 
