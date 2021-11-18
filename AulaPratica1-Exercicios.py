@@ -42,7 +42,7 @@ print(horas, ":", minutos, ":", segundos);
 seg = int(input("Digite os segundos: "));
 
 horas = seg / 3600;
-minutos = ((horas - int(horas)) * 3600) / 60;
+minutos = ((horas - int(horas)) * 3600) / 60);
 segundos = ((minutos - int(minutos)) * 60);
 
 print(int(horas), ":", int(minutos), ":", int(segundos));
