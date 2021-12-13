@@ -14,7 +14,7 @@ def main():
     y = float(input("Digite outro: "))
     somadois = soma2(x, y)
 
-    print(f"A soma da primeira função é: {soma}")
-    print(f"A soma da segunda função é: {somadois}")
+    print(f"A soma da primeira funcao e: {soma}")
+    print(f"A soma da segunda funcao e: {somadois}")
 
 main()
