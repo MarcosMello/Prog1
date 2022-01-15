@@ -2,64 +2,44 @@ def minToHor(min):
     hor = min//60
     min -= hor*60
 
-    return hor, min
+    return f"{hor:02d}h {min:02d}min"
+
+def corredor(mulher, frs):
+    txt = ("da" if (mulher) else "do") if (frs) else ("A" if (mulher) else "O")
+
+    return f"{txt} {('corredora' if (mulher) else 'corredor')}"
 
 def main():
-    runner = "corredor"
-    runner_art = "do"
-    runner_art2 = "O"
+    mulher = False
 
     tMinu = int(input())
     idade = int(input())
     sexob = input()
 
-    if (idade <= 34):
-        tMax = 180
-    elif (idade <= 39):
-        tMax = 185
-    elif (idade <= 44):
-        tMax = 190
-    elif (idade <= 49):
-        tMax = 200
-    elif (idade <= 54):
-        tMax = 205
-    elif (idade <= 59):
-        tMax = 215
-    elif (idade <= 64):
-        tMax = 230
-    elif (idade <= 69):
-        tMax = 245
-    elif (idade <= 74):
-        tMax = 260
-    elif (idade <= 79):
-        tMax = 275
-    else:
-        tMax = 290
-    
-    if (sexob == "f" or sexob == "F"):
-        tMax += 30
-        runner = "corredora"
-        runner_art = "da"
-        runner_art2 = "A"
-    
-    hc, mc = minToHor(tMinu)
-    print(f"Tempo {runner_art} {runner}: {hc:02d}h {mc:02d}min")
+    f = lambda idade, i, m: (m * (idade//5 - i//5))
 
-    hm, mm = minToHor(tMax)
-    print(f"Tempo necessario: {hm:02d}h {mm:02d}min")
+    if idade < 34:
+        tMax = 180
+    elif idade >= 80:
+        tMax = 290
+    elif idade <= 54:
+        tMax = (180 if idade <= 44 else 180 + 5) + (f(idade, 34, 5))
+    else:
+        tMax = 215 + (f(idade, 59, 15))
+    
+    mulher = True if (sexob == "f" or sexob == "F") else False
+    tMax += 30 if (mulher) else 0
+    
+    print(f"Tempo {corredor(mulher, True)}: {minToHor(tMinu)}")
+
+    print(f"Tempo necessario: {minToHor(tMax)}")
 
     tempo = tMax - tMinu
 
-    if tempo >= 0:
-        acOrAb = "abaixo"
-        indice = "SIM"
-    else:
-        acOrAb = "acima"
-        indice = "NAO"
+    acOrAb, indice = ("abaixo" if tempo >= 0 else "acima"), ("SIM" if tempo >= 0 else "NAO")  
 
     print(f"Conseguiu indice? {indice}")
 
-    hf, mf = minToHor(abs(tempo))
-    print(f"{runner_art2} {runner} correu {hf:02d}h {mf:02d}min {acOrAb} do indice")
+    print(f"{corredor(mulher, False)} correu {minToHor(abs(tempo))} {acOrAb} do indice")
 
 main()
