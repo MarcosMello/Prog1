@@ -11,9 +11,10 @@ def div(n = 1, c = 0):
         
         return div(n-1, c)
     else:
-        return c;
+        return c
     
 def main():
-    print(f"Temos {div(5)} números divisiveis por 2.")
+    n = int(input())
+    print(f"Temos {div(n)} números divisiveis por 2.")
 
 main()

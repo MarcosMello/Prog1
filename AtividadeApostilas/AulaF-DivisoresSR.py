@@ -9,13 +9,8 @@ def div():
         return 0
     
 def main():
-    contador = 0
 
-    contador += div()
-    contador += div()
-    contador += div()
-    contador += div()
-    contador += div()
+    contador = div() + div() + div() + div() + div()
 
     print(f"Temos {contador} números divisiveis por 2.")
 
