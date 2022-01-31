@@ -23,18 +23,11 @@ def printnum(n, i = 0):
 
         return printnum(n, i)
 
-def interval(a, b, c = 0, flag = False):
-    if (not flag):
-        c = a
+def interval(a, b):
+    if (a <= b):
+        print(a)
 
-        return interval(a, b, c, flag = True)
-    
-    c += 1
-
-    if (c < b):
-        print(c)
-
-        return interval(a, b, c, flag)
+        interval(a + 1, b)
 
 def dPow(a, b):
     if (b == 1):

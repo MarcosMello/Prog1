@@ -1,11 +1,8 @@
-def fac(x, q = 1):
+def fac(x):
     if (x == 0):
         return 1
     else:
-        if (q == x):
-            return q
-        else:
-            return q * fac(x, q+1) 
+        return x * fac(x-1)
 
 def euler(x, q = 0, f = fac):
     if ((x-1) == q):
