@@ -66,7 +66,7 @@ def escolheDestino(n):
 	"""
 	x = int(input("--> Escolha o seu destino: "))
 
-	if x < 1 or x > 5:
+	if x < n or x > n:
 		print("Destino inválido! Você deve digitar um valor entre 1 e 5.")
 		return escolheDestino(n)
 	else:
