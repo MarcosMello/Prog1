@@ -1,7 +1,7 @@
 def f1(n):
     """Retorna a quantidade de números naturais pares menores ou iguais a n"""
     if n == 0:
-        return 0
+        return 1
     else:
         if n % 2 == 0:
             return 1 + f1(n - 2) #Por que n - 2? se o n for par (par - 2 = par )
