@@ -1,39 +1,59 @@
-idade = int(input())
+# def getNBeb(i = 0): #falta documentar
+#     nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i)
 
-if (idade <= 34): #aqui comeca +5
-    tMax = 180
-elif (idade <= 39):
-    tMax = 185 #+5
-elif (idade <= 44):
-    tMax = 190 #+5
-elif (idade <= 49): #aqui interrompe
-    tMax = 200 #+10 -> +5 habitual +5 que tem que ser a mais
-elif (idade <= 54):
-    tMax = 205 #+5
-elif (idade <= 59): #aqui comeca +15
-    tMax = 215 #+10
-elif (idade <= 64):
-    tMax = 230 #+15
-elif (idade <= 69):
-    tMax = 245 #+15
-elif (idade <= 74):
-    tMax = 260 #+15
-elif (idade <= 79):
-    tMax = 275 #+15
-else:
-    tMax = 290 
+#     if nB == None:
+#         return i
+    
+#     return getNBeb(i + 1)
+"""
 
-print(tMax)
+def troco(res): #falta documentar e escrever uma versão melhor
+    if res != 0 and res >= 0.001:
+        if res >= 100:
+            print("R$ 100.00")
+            res -= 100
+        elif res >= 50:
+            print("R$ 50")
+            res -= 50
+        elif res >= 20:
+            print("R$ 20")
+            res -= 20
+        elif res >= 10:
+            print("R$ 10")
+            res -= 10
+        elif res >= 5:
+            print("R$ 5")
+            res -= 5
+        elif res >= 2:
+            print("R$ 2")
+            res -= 2
+        elif res >= 1:
+            print("R$ 1")
+            res -= 1
+        elif res >= 0.50:
+            print("R$ 0.50")
+            res -= 0.50
+        elif res >= 0.25:
+            print("R$ 0.25")
+            res -= 0.25
+        elif res >= 0.10:
+            print("R$ 0.10")
+            res -= 0.10
+        elif res >= 0.05:
+            print("R$ 0.05")
+            res -= 0.05
+        elif res >= 0.01:
+            print("R$ 0.01")
+            res -= 0.01
+        troco(res)
 
-f = lambda idade, i, m: (m * (idade//5 - i//5))
+    return
 
-if idade < 34:
-    tMax = 180
-elif idade >= 80:
-    tMax = 290
-elif idade <= 54:
-    tMax = (180 if idade <= 44 else 180 + 5) + (f(idade, 34, 5))
-else:
-    tMax = 215 + (f(idade, 59, 15))
-
-print(tMax)
+"""
+"""
+m = 10
+mult = 100
+(f'0,{(f'{m}' if (m >= 10) else f'0{m}')}') 
+(f'0,{m}')
+(f'{m}' if (m >= 10) else f'0{m}') if(m / mult > 0) else (f'{m},00')
+"""
