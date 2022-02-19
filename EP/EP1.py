@@ -1,5 +1,5 @@
 from os import system, name
-#docstring
+
 def limpa():
     """
     Função para limpar a tela.
