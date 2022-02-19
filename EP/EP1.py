@@ -13,7 +13,7 @@ def limpa():
 
     return
 
-def Rinput(func, maxV = None, msg = "", msgE = ""):
+def Rinput(func, maxV = None, msg = "", msgE = "", minV = 1, flag = False):
     """
     Função responsavel por todos os inputs do EP.
 
@@ -22,11 +22,12 @@ def Rinput(func, maxV = None, msg = "", msgE = ""):
 
     Parametros:
     func (função): Recebe a função que será usada para converter o input.
-    maxV (int)(opc): Recebe o valor máximo que essa variavel pode ser.
+    maxV (float/int)(opc): Recebe o valor máximo que essa variavel pode ser.
     msg (str)(opc): Recebe a mensagem que será exposta no input.
     msgE (str)(opc): Recebe a mensagem de erro que será exposta caso haja 
     uma excessão ou, se estiver utilizando maxV, quando o número recebido
-    no input seja menor que 1 ou maior que maxV.  
+    no input seja menor que 1 ou maior que maxV.
+    minV (float/int)(opc): Recebe o valor mínimo que essa variável pode ser.  
 
     Return:
     int -> Caso a func tenha recebido int como paramentro.
@@ -36,15 +37,17 @@ def Rinput(func, maxV = None, msg = "", msgE = ""):
         r = func(input(msg))
     except:
         print(msgE)
-        return Rinput(func, maxV, msg, msgE)
-    
-    if ((maxV != None) and (1 <= r <= maxV)):
-        return r
+        return Rinput(func, maxV, msg, msgE, flag)
+
+    minV, r, maxV, flag = ((minV * 100), (r * 100), (maxV * 100), True) if (minV < 0) else (minV, r, maxV, flag) 
+
+    if ((maxV != None) and (minV <= r <= maxV)):
+        return r if (not flag) else r/100
     elif (maxV != None):
         print(msgE)
-        return Rinput(func, maxV, msg, msgE)
+        return Rinput(func, maxV, msg, msgE, flag)
     
-    return r
+    return r if (not flag) else r/100
 
 def fDict(n):
     """
@@ -135,7 +138,7 @@ def check(c = 0, a = 0, g = None, l = None, lv = None, m = 0, cc = 0):
 
     return (c >= 0 and a >= 0 and m >= 0 and cc >= 0), special(g), special(l), special(lv)
 
-def menu(c, a, g, l, lv, m, cc, off = 0, i = 1, id1 = None, id2 = None, id3 = None, id4 = None, id5 = None, cnt = 0):
+def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, id3 = None, id4 = None, id5 = None, cnt = 0):
     """
     Função responsável pelo menu, mantendo-os
     sempre atualizados com base na quatidade de ingredientes disponíveis.
@@ -154,7 +157,6 @@ def menu(c, a, g, l, lv, m, cc, off = 0, i = 1, id1 = None, id2 = None, id3 = No
     Int -> Indica o ID.
     None -> Indica que a opção não está presente.
     """
-    Q_GELO = 5
     flag = False
 
     vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None
@@ -172,14 +174,14 @@ def menu(c, a, g, l, lv, m, cc, off = 0, i = 1, id1 = None, id2 = None, id3 = No
             print(f"{cnt} - {nB} - {v} {'-' if (uG or uLV or uL) else ''} {'(G)' if (uG) else ''}{'(V)' if (uLV) else ''}{'(L)' if (uL) else ''}")
             flag = True
         
-        return menu(c, a, g, l, lv, m, cc, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt) #se decidir por não retornar nada remover e mudar um pouco a logica
+        return menu(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt)
     elif (cnt < 5):
         nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0) #provavelmente pode ser transformado em função
 
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) #
         if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):#
             cnt += 1 
-            print(f"{cnt} - {nB} - {v} {'-' if (uG or uLV or uL) else ''} {'(G)' if (uG) else ''}{'(V)' if (uLV) else ''}{'(L)' if (uL) else ''}")# responder c true/false pra poder fazer o resto da lógica de menu
+            print(f"{cnt} - {nB} - {v} {'-' if (uG or uLV or uL) else ''} {'(G)' if (uG) else ''}{'(V)' if (uLV) else ''}{'(L)' if (uL) else ''}")
             id1, id2, id3, id4, id5 = uVar(id1, 0), uVar(id2, 0, i = id1), uVar(id3, 0, i = id2), uVar(id4, 0, i = id3), uVar(id5, 0, i = id4)
 
     return id1, id2, id3, id4, id5
@@ -201,7 +203,84 @@ def troco(vT, i = 0, mult = None, m = None): #falta documentar
     
     return
 
-def programa(cup, c, a, g, l, lv, m, cc, off = 0): #falta documentar
+def infoP(i = 0): #falta documentar
+    p = lambda msg, val: print(msg) if (val > 0) else None
+
+    nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i)
+
+    if (nB != None):
+        print(f"\n{nB}: R${v} ", end = "")
+        print("- (G)") if (gelada == 1) else print("- (Q)") if (gelada == 0) else print("- (G)(Q)")
+        p(f"- {cB}g de café solúvel", cB)
+        p(f"- {aB}ml de água", aB)
+        p(f"- {leB}ml de leite", leB)
+        p(f"- {mB}g de preparado para Chá-mate", mB)
+        p(f"- {ccB}ml de calda de chocolate", ccB)
+
+        infoP(i+1)
+    else:
+        _ = input("\nPressione ENTER(<-') para retornar para o menu...")
+    
+    return
+
+def infoI(cup, c, a, g, l, lv, m, cc, fat, fim = False):
+
+    print("Informações Internas:\n")
+
+    print(f"Copos: {cup}")
+    print(f"Água: {a}")
+    print(f"Café Solúvel: {c}")
+    print(f"Gelo: {g}")
+    print(f"Leite Comum: {l}")
+    print(f"Leite Vegetal: {lv}")
+    print(f"Preparado para Chá-mate: {m}")
+    print(f"Calda de Chocolate: {cc}")
+    print(f"Faturamento: R${fat}")
+
+    _ = input(f"\nPressione ENTER(<-') para {'retornar para o menu...' if (not fim) else 'finalizar...'}") 
+
+    return
+
+def venda(c, a, g, l, lv, m, cc, Q_GELO, id): #falta documentar
+    fL = lambda op1, op2, id: op1 if (id != 0) else op2
+
+    nB, v, cB, aB, leB, mB, ccB, gelada = fDict(id)
+
+    print(f"Você escolheu {fL('o', 'a', id)} {nB}")
+    print(f"Preço: R${v}")
+
+    if ((gelada > 1) and (g - Q_GELO >= 0)):
+        txt = f"Deseja que {fL('seu', 'sua', id)} {nB} seja preparad{fL('o', 'a', id)} {fL('Quente', 'Tmp. Natural', id)} (1) ou Gelad{fL('o', 'a', id)} (2)? "
+        rsp = Rinput(int, 2, txt, "Por favor, utilize apenas os números 1 e 2.")
+        g -= Q_GELO if (rsp == 2) else 0
+    elif (gelada == 1):
+        g -= Q_GELO
+    
+    if((leB > 0) and ((l - leB) >= 0) and ((lv - leB)  >= 0)):
+        txt = f"Deseja que seu {nB} seja preparado com Leite Comum (1) ou Leite Vegetal (2)? "
+        rsp = Rinput(int, 2, txt, "Por favor, utilize apenas os números 1 e 2.")
+        l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv-leB))
+    elif((leB > 0) and ((l - leB) >= 0)):
+        l -= leB
+    elif((leB > 0) and ((lv - leB) >= 0)):
+        lv -= leB
+    
+    return (c - cB), (a - aB), g, l, lv, (m - mB), (cc - ccB), v
+
+def pix(v):
+    rsp = Rinput(float, 94000.00, "Insira o dinheiro: ", "Por favor, utilize apenas os números entre 0.01 e 94000.", 0.01)
+    
+    dif = round(rsp - v, 2)
+
+    if (dif >= 0):
+        return dif
+
+    return pix(round(v - rsp, 2))
+
+def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0): #falta documentar
+    Q_GELO = 5 #Quantidade de gelo necessaria para o preparo das bebidas geladas
+
+    limpa()
     lch = lambda vl, v1, v2, v3, v4, v5: (v1 != vl and v2 != vl and v3 != vl and v4 != vl and v5 != vl)
 
     next = 0
@@ -209,7 +288,7 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0): #falta documentar
     print("Produtos:")
 
     if cup > 0:
-        id1, id2, id3, id4, id5 = menu(c, a, g, l, lv, m, cc, off)
+        id1, id2, id3, id4, id5 = menu(c, a, g, l, lv, m, cc, Q_GELO, off)
 
         if (id1 == id2 == id3 == id4 == id5 == None):
             print("Aguardando Manutenção:\nFalta geral de ingredientes!")
@@ -217,7 +296,6 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0): #falta documentar
             next = 5 if (id5 != None) else 4 if (id4 != None) else 3 if (id3 != None) else 2 if (id2 != None) else 1 if (id1 != None) else 0
 
             if (lch(0, id1, id2, id3, id4, id5) and lch(None, id1, id2, id3, id4, id5)): #none and 0
-                off = id5
                 next += 1
                 print (f"{next} - Mostrar Mais")  
 
@@ -227,38 +305,52 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0): #falta documentar
     print("Outras:")
     print(f"{next + 1} - Informações dos Produtos")
     print(f"{next + 2} - Informações Internas")
-    print(f"{next + 3} - Finalizar")
+    print(f"{next + 3} - Finalizar\n")
 
     q1 = Rinput(int, next + 3, "Digite a opção que deseja: ", f"Por favor, utilize números inteiros de 1-{next+3}.")
 
     if (q1 == next == 6):
-        print("Proxima página") #incompleto
+        off = id5
+        programa(cup, c, a, g, l, lv, m, cc, off, fat)
     elif (q1 == (next + 1)):
-        print("Informações dos Produtos") #incompleto
+        limpa()
+        print("Produtos:")
+        print("Legenda: (Q) -> Quente; (G) -> Gelada.")
+        infoP()
     elif (q1 == (next + 2)):
-        print("Informações Internas") #incompleto
+        limpa()
+        infoI(cup, c, a, g, l, lv, m, cc, fat)
     elif (q1 == (next + 3)):
-        print("Finalizar") #incompleto
+        limpa()
+        print("Finalizando!")
+        infoI(cup, c, a, g, l, lv, m, cc, fat, True)
+        exit()
     else:
         if (q1 == 1):
-            print("1ª opc") #incompleto
+            c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id1)
         elif (q1 == 2):
-            print("2ª opc") #incompleto
+            c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id2)
         elif (q1 == 3):
-            print("3ª opc") #incompleto
+            c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id3)
         elif (q1 == 4):
-            print("4ª opc") #incompleto
+            c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id4)
         elif (q1 == 5):
-            print("5ª opc") #incompleto
-    
-    _ = input("enter")
+            c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id5)
+
+        fat += v
+        qtroco = pix(v)
+        (print("Pegue seu troco: "), troco(qtroco)) if (qtroco > 0) else print("Troco: R$ 0.00")
+
+        txt = f"Deseja comprar outro produto? (Sim (1); Não (2)) "
+        rsp = Rinput(int, 2, txt, "Por favor, utilize apenas os números 1 e 2.")
+        (limpa(), print("Finalizando!"), infoI(cup, c, a, g, l, lv, m, cc, fat, True), exit()) if (rsp == 2) else None
+
+    programa(cup, c, a, g, l, lv, m, cc, off, fat)
+
     return
 
 def main():
-    limpa()
     programa(10, 50, 500, 10, 500, 500, 70, 100) #(10, 50, 500, 10, 500, 500, 70, 100)
     #troco(94000) #limite maximo que eu iria com tranquilidade
 
 main()
-
-#problema de arredondamento + 0.0000001
