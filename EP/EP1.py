@@ -1,12 +1,12 @@
 from os import system, name
-#conferir documentação de todos
+#docstring
 def limpa():
     """
     Função para limpar a tela.
 
     Parametros: Nenhum
 
-    Returno: None
+    Retorno: None
     """
 
     system('cls') if (name == 'nt') else system('clear')
@@ -15,7 +15,7 @@ def limpa():
 
 def Rinput(func, maxV = None, msg = "", msgE = "", minV = 1, flag = False):
     """
-    Função responsavel por todos os inputs do EP.
+    Função responsável por todos os inputs do EP.
 
     Tenta converter um dado input e, caso esse gere uma exceção, repete-se, 
     mostrando também uma mensagem de erro, até receber um valor valido.
@@ -27,9 +27,10 @@ def Rinput(func, maxV = None, msg = "", msgE = "", minV = 1, flag = False):
     msgE (str)(opc): Recebe a mensagem de erro que será exposta caso haja 
     uma excessão ou, se estiver utilizando maxV, quando o número recebido
     no input seja menor que 1 ou maior que maxV.
-    minV (float/int)(opc): Recebe o valor mínimo que essa variável pode ser.  
+    minV (float/int)(opc): Recebe o valor mínimo que essa variável pode ser.
+    flag (bool)(opc): Define se estamos lidando com numeros floats com valores após a virgula.  
 
-    Return:
+    Retorno:
     int -> Caso a func tenha recebido int como paramentro.
     float -> Caso a func tenha recebido float como parametro. 
     """
@@ -55,9 +56,9 @@ def fDict(n):
     devem ser adicionado os novos sabores.
 
     Parametros:
-    n (int) = ID da bebida.
+    n (int): ID da bebida.
 
-    Return:
+    Retorno:
     string: Nome da bebida.
     float: Valor da bebida.
     int: Quantidade de café soluvel necessário para o preparo.
@@ -83,11 +84,23 @@ def fDict(n):
     elif (n == 6):
         return "Achocolatado", 12, 0, 0, 280, 0, 20, 2
     elif (n == 0):
-        return "Água", 0, 0, 300, 0, 0, 0, 2
+        return "Água c/ Gelo", 3, 0, 300, 0, 0, 0, 1
     
     return None, None, None, None, None, None, None, None
 
-def fNota(n): #falta documentar
+def fNota(n):
+    """
+    Função que retorna as notas/moedas em que o troco pode ser devolvido.
+    Notas: 100, 50, 20, 10, 5, 2 -> 0, 1, 2, 3, 4, 5
+    Moedas: 1, 0.50, 0.25, 0.10, 0.05, 0.01 -> 6, 7, 8, 9, 10, 11
+
+    Paramentros:
+    n (int): Indica qual nota/moeda vai ser retornada com base na ordem acima.
+
+    Retorno:
+    int: Indica se é nota (1) ou se é moeda (100).
+    int: Valor da nota/moeda. 
+    """
     x, y = 1, None
 
     n1 = 100
@@ -112,7 +125,7 @@ def fNota(n): #falta documentar
 
 def check(c = 0, a = 0, g = None, l = None, lv = None, m = 0, cc = 0):
     """
-    Função responsavel por verificar se o item pode ser adicionado no menu
+    Função responsável por verificar se o item pode ser adicionado no menu
     por meio da quantidade de itens disponíveis.
 
     Paramentos: Q. = Quantidade; (opc) = Parametro opcional.
@@ -151,9 +164,17 @@ def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, 
     lv (int): Quantidade disponível de leite veg. em mililitros (ml).
     m (int): Quantidade disponível de mate em mililitros (g).
     cc (int): Quantidade disponível de calda de chocolate em mililitros (ml).
-    off (int)(opc): Indica em qual menu estar.
+    Q_GELO (int): Quantidade de gelo necessária para o preparo das bebidas (un).
+    off (int)(opc): Indica em qual menu estar (offset).
+    i (int)(opc): Contador responsável por determinar o item de fDict() da iteração.
+    id1 (int)(opc): Responsável por armazenar o ID da primeira bebida.
+    id2 (int)(opc): Responsável por armazenar o ID da segunda bebida.
+    id3 (int)(opc): Responsável por armazenar o ID da terceira bebida.
+    id4 (int)(opc): Responsável por armazenar o ID da quarta bebida.
+    id5 (int)(opc): Responsável por armazenar o ID da quinta bebida.
+    cnt (int)(opc): Contador responsável por dar, aos itens, os números que são mostrados no menu.
 
-    Returno: Int ou None.
+    Retorno: Int ou None.
     Int -> Indica o ID.
     None -> Indica que a opção não está presente.
     """
@@ -167,7 +188,7 @@ def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, 
     nB, v, cB, aB, leB, mB, ccB, gelada = fDict(ic)
 
     if ((nB != None) and (cnt < 5)):
-        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) #talvez eu possa botar isso na def check
+        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
 
         if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
             cnt += 1
@@ -176,17 +197,28 @@ def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, 
         
         return menu(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt)
     elif (cnt < 5):
-        nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0) #provavelmente pode ser transformado em função
+        nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0)
 
-        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) #
-        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):#
+        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) 
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
             cnt += 1 
             print(f"{cnt} - {nB} - {v} {'-' if (uG or uLV or uL) else ''} {'(G)' if (uG) else ''}{'(V)' if (uLV) else ''}{'(L)' if (uL) else ''}")
             id1, id2, id3, id4, id5 = uVar(id1, 0), uVar(id2, 0, i = id1), uVar(id3, 0, i = id2), uVar(id4, 0, i = id3), uVar(id5, 0, i = id4)
 
     return id1, id2, id3, id4, id5
 
-def troco(vT, i = 0, mult = None, m = None): #falta documentar
+def troco(vT, i = 0, mult = None, m = None):
+    """
+    Função responsável por calcular e imprimir o troco.
+
+    Parametros:
+    vT (float): Valor do troco.
+    i (int)(opc): Contador responsável por determinar o item de fNota() da iteração.
+    mult (int)(opc): Variável que indica se é moeda (100) ou nota (1).
+    m (int)(opc): Variável que contém a moeda/nota.
+
+    Retorno: None
+    """
     rs = lambda m, mult: (f'0,{m}' if (m >= 10) else f'0,0{m}') if(mult == 100) else (f'{m},00')
 
     if (m != None):
@@ -203,7 +235,15 @@ def troco(vT, i = 0, mult = None, m = None): #falta documentar
     
     return
 
-def infoP(i = 0): #falta documentar
+def infoP(i = 0):
+    """
+    Função responsável por imprimir as informações dos produtos.
+
+    Parametros:
+    i (int)(opc): Variável responsável por determinar o item de fDict() da iteração. 
+
+    Retorno: None
+    """
     p = lambda msg, val: print(msg) if (val > 0) else None
 
     nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i)
@@ -224,7 +264,23 @@ def infoP(i = 0): #falta documentar
     return
 
 def infoI(cup, c, a, g, l, lv, m, cc, fat, fim = False):
+    """
+    Função responsável por imprimir as informações internas.
 
+    Parametros:
+    cup (int): Quantidade disponível de copos (un).
+    c (int): Quantidade disponível de café solúvel em gramas (g).
+    a (int): Quantidade disponível de água em mililitros (ml).
+    g (int): Quantidade disponível de cubos de gelo (un).
+    l (int): Quantidade disponível de leite em mililitros (ml).
+    lv (int): Quantidade disponível de leite veg. em mililitros (ml).
+    m (int): Quantidade disponível de mate em mililitros (g).
+    cc (int): Quantidade disponível de calda de chocolate em mililitros (ml).
+    fat (int): Faturamento (R$).
+    fim (int)(opc): Indica que estamos finalizando o programa.
+
+    Retorno: None
+    """
     print("Informações Internas:\n")
 
     print(f"Copos: {cup}")
@@ -241,7 +297,33 @@ def infoI(cup, c, a, g, l, lv, m, cc, fat, fim = False):
 
     return
 
-def venda(c, a, g, l, lv, m, cc, Q_GELO, id): #falta documentar
+def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
+    """
+    Função responsável pelas coisas relativas à venda. 
+    (Qual bebida está sendo vendida, se está sendo vendida quente ou gelada e 
+    se está usando leite comum ou vegetal.)
+
+    Parametros:
+    c (int): Quantidade disponível de café solúvel em gramas (g).
+    a (int): Quantidade disponível de água em mililitros (ml).
+    g (int): Quantidade disponível de cubos de gelo (un).
+    l (int): Quantidade disponível de leite em mililitros (ml).
+    lv (int): Quantidade disponível de leite veg. em mililitros (ml).
+    m (int): Quantidade disponível de mate em mililitros (g).
+    cc (int): Quantidade disponível de calda de chocolate em mililitros (ml).
+    Q_GELO (int): Quantidade de gelo necessária para o preparo das bebidas (un).
+    id (int): ID da bebida que está sendo vendida.
+
+    Retorno:
+    int: Nova quantidade disponível de café solúvel em gramas (g).
+    int: Nova quantidade disponível de água em mililitros (ml).
+    int: Nova quantidade disponível de cubos de gelo (un).
+    int: Nova quantidade disponível de leite em mililitros (ml).
+    int: Nova quantidade disponível de leite veg. em mililitros (ml).
+    int: Nova quantidade disponível de mate em mililitros (g).
+    int: Nova quantidade disponível de calda de chocolate em mililitros (ml).
+    float: Valor da bebida.
+    """
     fL = lambda op1, op2, id: op1 if (id != 0) else op2
 
     nB, v, cB, aB, leB, mB, ccB, gelada = fDict(id)
@@ -268,6 +350,15 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id): #falta documentar
     return (c - cB), (a - aB), g, l, lv, (m - mB), (cc - ccB), v
 
 def pix(v):
+    """
+    Função responsável por receber o pagamento.
+
+    Paramentro:
+    v (float): Valor que precisamos receber.
+
+    Retorno:
+    float: Valor que deverá ser devolvido como troco.
+    """
     rsp = Rinput(float, 94000.00, "Insira o dinheiro: ", "Por favor, utilize apenas os números entre 0.01 e 94000.", 0.01)
     
     dif = round(rsp - v, 2)
@@ -277,7 +368,64 @@ def pix(v):
 
     return pix(round(v - rsp, 2))
 
-def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0): #falta documentar
+def m1(c, a, g, l, lv, m, cc, Q_GELO, off, i = 1):
+    """
+    Função responsável por verificar se tem, ao menos, 
+    um item, que pode ser produzido, depois do último 
+    mostrado no menu, para que mostre, se verdadeiro, 
+    a opção de próxima página.
+
+    Parametro:
+    c (int): Quantidade disponível de café solúvel em gramas (g).
+    a (int): Quantidade disponível de água em mililitros (ml).
+    g (int): Quantidade disponível de cubos de gelo (un).
+    l (int): Quantidade disponível de leite em mililitros (ml).
+    lv (int): Quantidade disponível de leite veg. em mililitros (ml).
+    m (int): Quantidade disponível de mate em mililitros (g).
+    cc (int): Quantidade disponível de calda de chocolate em mililitros (ml).
+    Q_GELO (int): Quantidade de gelo necessária para o preparo das bebidas (un).
+    off (int)(opc): Indica em qual menu estar (offset).
+    i (int)(opc): Contador responsável por determinar o item de fDict() da iteração.
+
+    Retorno:
+    bool: True, caso tenha algum item disponível, se não, False.
+    """
+    vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None
+
+    nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i + off)
+
+    if (nB != None):
+        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
+            return True
+        else:
+            return m1(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1)
+    else:
+        nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0)
+        bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
+            return True
+    
+    return False
+
+def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
+    """
+    Função responsável pela execução do programa.
+
+    Parametros:
+    cup (int): Quantidade disponível de copos (un).
+    c (int): Quantidade disponível de café solúvel em gramas (g).
+    a (int): Quantidade disponível de água em mililitros (ml).
+    g (int): Quantidade disponível de cubos de gelo (un).
+    l (int): Quantidade disponível de leite em mililitros (ml).
+    lv (int): Quantidade disponível de leite veg. em mililitros (ml).
+    m (int): Quantidade disponível de mate em mililitros (g).
+    cc (int): Quantidade disponível de calda de chocolate em mililitros (ml).
+    off (int)(opc): Indica em qual menu estar (offset).
+    fat (int)(opc): Faturamento (R$).
+
+    Retorno: None
+    """
     Q_GELO = 5 #Quantidade de gelo necessaria para o preparo das bebidas geladas
 
     limpa()
@@ -296,8 +444,18 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0): #falta documentar
             next = 5 if (id5 != None) else 4 if (id4 != None) else 3 if (id3 != None) else 2 if (id2 != None) else 1 if (id1 != None) else 0
 
             if (lch(0, id1, id2, id3, id4, id5) and lch(None, id1, id2, id3, id4, id5)): #none and 0
+                if (off >= 5):
+                    next += 1
+                    print (f"{next} - Pagina Anterior")
+
+                ck = m1(c, a, g, l, lv, m, cc, Q_GELO, id5)
+
+                if (ck):
+                    next += 1
+                    print (f"{next} - Proxima Página")
+            elif (off >= 5):
                 next += 1
-                print (f"{next} - Mostrar Mais")  
+                print (f"{next} - Pagina Anterior")
 
     else:
         print("Aguardando Manutenção:\nFalta de copo!")
@@ -309,8 +467,11 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0): #falta documentar
 
     q1 = Rinput(int, next + 3, "Digite a opção que deseja: ", f"Por favor, utilize números inteiros de 1-{next+3}.")
 
-    if (q1 == next == 6):
+    if (((q1 == next == 6) and (off < 5)) or ((q1 == next == 7) and (off >= 5))):
         off = id5
+        programa(cup, c, a, g, l, lv, m, cc, off, fat)
+    elif ((off >= 5) and (((q1 == next) and (next != 7)) or ((q1 == next - 1) and (next == 7)))):
+        off -= 5
         programa(cup, c, a, g, l, lv, m, cc, off, fat)
     elif (q1 == (next + 1)):
         limpa()
@@ -344,13 +505,13 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0): #falta documentar
         txt = f"Deseja comprar outro produto? (Sim (1); Não (2)) "
         rsp = Rinput(int, 2, txt, "Por favor, utilize apenas os números 1 e 2.")
         (limpa(), print("Finalizando!"), infoI(cup, c, a, g, l, lv, m, cc, fat, True), exit()) if (rsp == 2) else None
+        off = 0
 
     programa(cup, c, a, g, l, lv, m, cc, off, fat)
 
     return
 
 def main():
-    programa(10, 50, 500, 10, 500, 500, 70, 100) #(10, 50, 500, 10, 500, 500, 70, 100)
-    #troco(94000) #limite maximo que eu iria com tranquilidade
+    programa(10, 50, 1000, 10, 500, 500, 50, 100) #copos, café, água, gelo, leite, leite vegano, chá mate, calda
 
 main()
