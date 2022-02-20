@@ -513,6 +513,6 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     return
 
 def main():
-    programa(15, 500, 3250, 70, 960, 960, 14, 100) #copos, café, água, gelo, leite, leite vegano, chá mate, calda
+    programa(17, 500, 3250, 45, 960, 960, 14, 120) #copos, café, água, gelo, leite, leite vegano, chá mate, calda
 
 main()
