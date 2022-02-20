@@ -338,10 +338,10 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     elif (gelada == 1):
         g -= Q_GELO
     
-    if((leB > 0) and ((l - leB) >= 0) and ((lv - leB)  >= 0)):
+    if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)):
         txt = f"Deseja que seu {nB} seja preparado com Leite Comum (1) ou Leite Vegetal (2)? "
         rsp = Rinput(int, 2, txt, "Por favor, utilize apenas os números 1 e 2.")
-        l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv-leB))
+        l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv - leB))
     elif((leB > 0) and ((l - leB) >= 0)):
         l -= leB
     elif((leB > 0) and ((lv - leB) >= 0)):
@@ -498,6 +498,7 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
         elif (q1 == 5):
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id5)
 
+        cup -= 1
         fat += v
         qtroco = pix(v)
         (print("Pegue seu troco: "), troco(qtroco)) if (qtroco > 0) else print("Troco: R$ 0.00")
@@ -512,6 +513,6 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     return
 
 def main():
-    programa(10, 50, 1000, 10, 500, 500, 50, 100) #copos, café, água, gelo, leite, leite vegano, chá mate, calda
+    programa(15, 500, 3250, 70, 960, 960, 14, 100) #copos, café, água, gelo, leite, leite vegano, chá mate, calda
 
 main()
