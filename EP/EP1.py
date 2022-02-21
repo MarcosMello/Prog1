@@ -9,7 +9,7 @@ def limpa():
     Retorno: None
     """
 
-    system('cls') if (name == 'nt') else system('clear')
+    system('cls') if (name == 'nt') else system('clear') #Função clear
 
     return
 
@@ -34,21 +34,22 @@ def Rinput(func, maxV = None, msg = "", msgE = "", minV = 1, flag = False):
     int -> Caso a func tenha recebido int como paramentro.
     float -> Caso a func tenha recebido float como parametro. 
     """
-    try: 
+    try: #Tenta converter
         r = func(input(msg))
-    except:
+    except: #Caso tenha erro durante conversão
         print(msgE)
-        return Rinput(func, maxV, msg, msgE, flag)
+        return Rinput(func, maxV, msg, msgE, flag) #Recursão até ter um valor possível
 
     minV, r, maxV, flag = ((minV * 100), (r * 100), (maxV * 100), True) if (minV < 0) else (minV, r, maxV, flag) 
+    #^ Se nosso valor minimo for menor que 0, multiplicaremos os valores por 100 para evitar usar comparações entre floats
 
-    if ((maxV != None) and (minV <= r <= maxV)):
-        return r if (not flag) else r/100
-    elif (maxV != None):
+    if ((maxV != None) and (minV <= r <= maxV)): #Se tivermos um valor máximo e r estiver dentro dos limites:
+        return (r) if (not flag) else (r/100) #Retorna r se for maior que 0, se não r/100 
+    elif (maxV != None): #Se tivermos um valor máximo e r não estiver dentro dos limites:
         print(msgE)
-        return Rinput(func, maxV, msg, msgE, flag)
+        return Rinput(func, maxV, msg, msgE, flag) #Recursão até chegar em um valor válido
     
-    return r if (not flag) else r/100
+    return (r) if (not flag) else (r/100) #Retorna r se for maior que 0, se não r/100 
 
 def fDict(n):
     """
@@ -89,7 +90,8 @@ def fDict(n):
     elif (n == 0):
         return -12, "Água c/ Gelo", 3, 0, 300, 0, 0, 0, 1
     
-    #Caso adicione alguma bebida com valores inferiores a esse é necessario mudar
+    #Caso adicione alguma bebida com valores inferiores a esse é necessário mudar
+    #Não utilizar nomes de bebidas com mais que 22 caracteres
     return -22, None, None, 50, 250, 50, 8, 10, None 
 
 def fNota(n):
@@ -109,23 +111,23 @@ def fNota(n):
 
     n1 = 100
     
-    if (n <= 11):
+    if (n <= 11): #Caso n seja maior que 11, responderemos direto (None, None)
         if (n == 11):
-            return 100, 1
-        elif (1 < n < 6):
+            return 100, 1 #Retorna 1 centavo
+        elif (1 < n < 6): #Faz o próximo número, após 50 ser 20 ao invés de 25. (Parte das Notas)
             n1 = 20
             n -= 2
-        elif (6 < n < 9):
+        elif (6 < n < 9): #Faz o próximo número, após 2 começar de 100 ou 1 -uma vez que estamos falando de moedas nesse momento.
             x = 100
             n -= 6
-        elif (n >= 9):
+        elif (n >= 9):  #Faz o próximo número, após 25 ser 10 ao invés de 12.5. (Parte das moedas)
             x = 100
             n1 = 10
             n -= 9
             
-        y = n1//2**n
+        y = n1//2**n #Equação para calcular as notas que não entrarem no caso fixo (11) acima.
 
-    return (x, y) if (y != None) else (None, None)
+    return (x, y) if (y != None) else (None, None) 
 
 def check(c = 0, a = 0, g = None, l = None, lv = None, m = 0, cc = 0):
     """
@@ -151,7 +153,7 @@ def check(c = 0, a = 0, g = None, l = None, lv = None, m = 0, cc = 0):
     bool: True, se a bebida puder ser preparada com leite veg. e tiver Q. suficiente 
     desse, caso contrario, False.  
     """
-    special = lambda x: True if ((not x == None) and x >= 0) else False
+    special = lambda x: True if ((not x == None) and x >= 0) else False #Condição para os itens especiais, caso esses sejam diferentes de None e maiores ou iguais a zero, True, se não False.
 
     return (c >= 0 and a >= 0 and m >= 0 and cc >= 0), special(g), special(l), special(lv)
 
@@ -183,27 +185,30 @@ def menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = N
     Int -> Indica o ID.
     None -> Indica que a opção não está presente.
     """
+    #Variáveis de cores
     WHITE = '\033[37m'
     BWHITE = '\033[97m'
     GREEN = '\033[92m'
     CYAN = '\033[96m'
 
-    SPACES = 34 - 1
-    flag = False
+    SPACES = 34 - 1 #Espaços para a parte de 'Produtos e Variações*' do menu
+    flag = False #Caso a bebida possa ser produzida.
 
-    vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None
-    uVar = lambda var, u, t = True, i = -1: u if ((var == None) and (t) and ((i != None) and (u != i))) else var
+    vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None #Caso x != 0, analizará z que se for != none responderá z-y, se não y-x. Isso é usado para mandar as diferenças para check.
+    uVar = lambda var, u, t = True, i = -1: u if ((var == None) and (t) and ((i != None) and (u != i))) else var #Função que dá valor aos ids, verificando se esses já não estavam ocupados.
 
-    ic = i + off
+    ic = i + off #Possibilita a troca de páginas quando somado a um offset diferente de 0
 
-    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(ic) 
+    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(ic) #Item de fDict
 
-    if ((cup > 0) and (nB != None) and (cnt < 5)):
+    if ((cup > 0) and (nB != None) and (cnt < 5)): #Caso a bebida exista e tenha mais que 0 copos e menos que 5 itens já setados.
         space += SPACES
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
 
-        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))): #Se a bebida puder ser produzida
             cnt += 1
+            
+            #Faz um item de 'Produtos e Variações*'
             space -= (3 if (uG) else 0) + (3 if(uLV) else 0) + (3 if(uL) else 0)
             print(f"|{' ' * 3}{cnt}{' ' * 3}|", end = "")
             print(f"{' ' * (space//2)}{nB} ", end = "")
@@ -211,16 +216,19 @@ def menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = N
             print(f"{' ' * (space//2 if (space%2 == 0) else space//2 + 1)}", end = "")
             valor = f"|  {GREEN}R$ {v:.2f}{WHITE}  |" if (v >= 10) else f"|  {GREEN}R$  {v:.2f}{WHITE}  |"
             print(valor)
+
             flag = True
         
+        #v Chama a recursão para analizar todos os itens de fDict()
         return menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt)
-    elif ((cup > 0) and (cnt < 5)):
-        space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0)
+    elif ((cup > 0) and (cnt < 5)): #Caso a bebida não exista e tenha copo e tenha menos de 5 itens
+        space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0) #Água
         space += SPACES
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) 
-        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))): #Se a bebida puder ser produzida
             cnt += 1
 
+            #Faz um item de 'Produtos e Variações*'
             space -= (3 if (uG) else 0) + (3 if(uLV) else 0) + (3 if(uL) else 0) 
             print(f"|{' ' * 3}{cnt}{' ' * 3}|", end = "")
             print(f"{' ' * (space//2)}{nB} ", end = "")
@@ -229,7 +237,7 @@ def menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = N
             valor = f"|  R$ {v:.2f}  |" if (v >= 10) else f"|  {GREEN}R$  {v:.2f}{WHITE}  |"
             print(valor)
 
-            id1, id2, id3, id4, id5 = uVar(id1, 0), uVar(id2, 0, i = id1), uVar(id3, 0, i = id2), uVar(id4, 0, i = id3), uVar(id5, 0, i = id4)
+            id1, id2, id3, id4, id5 = uVar(id1, 0), uVar(id2, 0, i = id1), uVar(id3, 0, i = id2), uVar(id4, 0, i = id3), uVar(id5, 0, i = id4) #Atualiza os valores das variáveis id1-5 sem chamar uma nova recursão.
 
     return id1, id2, id3, id4, id5
 
@@ -245,19 +253,20 @@ def troco(vT, i = 0, mult = None, m = None):
 
     Retorno: None
     """
-    rs = lambda m, mult: (f'0,{m}' if (m >= 10) else f'0,0{m}') if(mult == 100) else (f'{m},00')
+    rs = lambda m, mult: (f'0,{m}' if (m >= 10) else f'0,0{m}') if(mult == 100) else (f'{m},00') #Formata a mensagem com base nos multiplicadores e se são maiores e iguais a 10 ou não.
 
-    if (m != None):
+    if (m != None): #Caso não m não esteja setado (início e caso a quantidade de notas iguais tenham acabado)
         nm = m * (100/mult)
         if ((vT//nm) != 0):
             print(f"R$ {rs(m, mult)}")
-            troco(vT - nm, i, mult, m)
+            troco(vT - nm, i, mult, m) #Recursão até acabar todas as notas iguais 
         else:
-            troco(vT, i + 1, None, None)
+            troco(vT, i + 1, None, None) #Recursão para mudar o m e o mult
     else:
-        vT = (vT * 100) if (i == 0) else vT
-        r, r1 = fNota(i)
-        troco(vT, i, r, r1) if (r != None) else None
+        vT = (vT * 100) if (i == 0) else vT #Multiplicando caso seja o início para que não use float
+        r, r1 = fNota(i) #Recebe os novos m e mult
+        troco(vT, i, r, r1) if (r != None) else None 
+        #^ Se R não existir - caso já tenhamos avaliado todos as notas/moedas- devolve um none e deixa chegar ao return final. Caso exista, faz uma recursão com os novos m e mult.
     
     return
 
@@ -272,9 +281,9 @@ def countN(n):
     int: Quantidade de dígitos.
     """
     if (n == 0):
-        return 0
+        return 0 #Caso não tenhamos mais números para tirar casas
     
-    return 1 + countN(n//10) 
+    return 1 + countN(n//10) #Adiciona 1 a recursão caso n não seja 0. (n//10) pois estamos tirando sempre uma casa decimal.
 
 def infoP(Q_GELO, i = 0):
     """
@@ -285,6 +294,7 @@ def infoP(Q_GELO, i = 0):
 
     Retorno: None
     """
+    #Variáveis de cores
     WHITE = '\033[37m'
     RED = '\033[91m'
     GREEN = '\033[92m'
@@ -292,17 +302,19 @@ def infoP(Q_GELO, i = 0):
     PURPLE = '\033[95m'
     YELLOW = '\033[33m'
 
-    SPACES = 55
+    SPACES = 55 #Espaços para contruir a tela
 
-    p = lambda msg, val: print(msg) if (val > 0) else None
-    nN = lambda n, var: (n + countN(var)) if(var != 0) else (n + 1)
+    p = lambda msg, val: print(msg) if (val > 0) else None #Só imprime a linha caso o valor do ingrediente seja maior que 0
+    nN = lambda n, var: (n + countN(var)) if(var != 0) else (n + 1) #Chama countN() para contar quantos espaços tem que ser dados se var != 0
 
-    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i)
-    space *= -1
+    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i) #Item de fDict
+    space *= -1 #Convertendo espaço pra positivo 
 
     if (nB != None):
-        qL1 = space + 8;
-        print(f"+{'-' * SPACES}+")
+        qL1 = space + 8; #Tamanho do nome da bebida + quantidade de caracteres necessários para formar a linha
+        
+        #Tela de Informações de Produto
+        print(f"+{'-' * SPACES}+") #Cabeçalho +--+
 
         print(f"|{' ' * fSpace(v, qL1, SPACES)}{PURPLE}{nB}{WHITE}: {GREEN}R$ {v:.2f}{WHITE}{' ' * fSpace(v, qL1, SPACES, True)}|")
 
@@ -317,9 +329,10 @@ def infoP(Q_GELO, i = 0):
         p(f"|{' ' * fSpace(None, nN(26, ccB), SPACES)}- {ccB}ml de calda de chocolate{' ' * fSpace(None, nN(26, ccB), SPACES, True)}|", ccB)
         
         print(f"+{'-' * SPACES}+")
-        infoP(Q_GELO, i+1)
+
+        infoP(Q_GELO, i+1) #Recursão para todos os itens de fDict() começando de Água c/ Gelo
     else:
-        _ = input(f"\nPressione {YELLOW}ENTER(<-'){WHITE} para retornar para o menu...")
+        _ = input(f"\nPressione {YELLOW}ENTER(<-'){WHITE} para retornar para o menu...") #Input para segurar a tela antes de voltar para o menu
     
     return
 
@@ -341,14 +354,16 @@ def infoI(cup, c, a, g, l, lv, m, cc, fat, fim = False):
 
     Retorno: None
     """
+    #Variáveis de cores
     WHITE = '\033[37m'
     YELLOW = '\033[33m'
 
-    SPACES = 55
+    SPACES = 55 #Espaços para contruir a tela
 
-    nN = lambda n, var: (n + countN(var)) if(var != 0) else (n + 1)
+    nN = lambda n, var: (n + countN(var)) if(var != 0) else (n + 1) #Chama countN() para contar quantos espaços tem que ser dados se var != 0
 
-    print(f"+{'-' * SPACES}+")
+    #Tela de Informações Internas
+    print(f"+{'-' * SPACES}+") #Cabeçalho +--+
     print(f"|{' ' * fSpace(None, 21, SPACES)}Informações Internas:{' ' * fSpace(None, 21, SPACES, True)}|")
     print(f"+{'-' * SPACES}+")
 
@@ -363,7 +378,7 @@ def infoI(cup, c, a, g, l, lv, m, cc, fat, fim = False):
     print(f"|{' ' * fSpace(None, 21 + nN(0, fat), SPACES)}- Faturamento: R$ {fat:.2f}{' ' * fSpace(None, 21 + nN(0, fat), SPACES, True)}|")
     print(f"+{'-' * SPACES}+")
 
-    _ = input(f"\nPressione {YELLOW}ENTER(<-'){WHITE} para {'retornar para o menu...' if (not fim) else 'finalizar...'}") 
+    _ = input(f"\nPressione {YELLOW}ENTER(<-'){WHITE} para {'retornar para o menu...' if (not fim) else 'finalizar...'}") #Input para segurar a tela antes de voltar para o menu ou finalizar
 
     return
 
@@ -394,6 +409,7 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     int: Nova quantidade disponível de calda de chocolate em mililitros (ml).
     float: Valor da bebida.
     """
+    #Variaveis de cores
     WHITE = '\033[37m'
     BWHITE = '\033[97m'
     RED = '\033[91m'
@@ -402,30 +418,31 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     CYAN = '\033[96m'
     PURPLE = '\033[95m'
 
-    fL = lambda op1, op2, id: op1 if (id != 0) else op2
+    fL = lambda op1, op2, id: op1 if (id != 0) else op2 #Faz a concordância de gênero entre as bebidas e os textos
 
-    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(id)
-    SPACE = (16 + (space * -1))
+    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(id) #Item de fDict
+    SPACE = (16 + (space * -1)) #Espaços para o formatar a venda
 
-    print(f"+{'-' * (SPACE + 2)}+")
+    #Tela de Venda
+    print(f"+{'-' * (SPACE + 2)}+") #Cabeçalho +---+
     print(f"| Você escolheu {fL('o', 'a', id)} {PURPLE}{nB}{WHITE} |")
     print(f"| {' ' * fSpace(v, 10+3, SPACE)}Preço: {GREEN}R$ {v:.2f}{WHITE}{' ' * fSpace(v, 10+3, SPACE, True)} |")
     print(f"+{'-' * (SPACE + 2)}+", end = "")
 
-    if ((gelada > 1) and (g - Q_GELO >= 0)):#
+    if ((gelada > 1) and (g - Q_GELO >= 0)): #Se for gelada opcional e tiver gelo disponível
         txt = f"\nDeseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja\npreparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {RED}1 {YELLOW}e {CYAN}2{YELLOW}.{WHITE}")
         g -= Q_GELO if (rsp == 2) else 0
-    elif (gelada == 1):
+    elif (gelada == 1): #Se for gelada obrigatória
         g -= Q_GELO
 
-    if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)):
+    if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)): #Se precisar de leite e tiver leite comum e vegetal
         txt = f"\nDeseja que seu {PURPLE}{nB}{WHITE} seja\npreparado com {BWHITE}Leite Comum (1) {WHITE}ou com\n{GREEN}Leite Vegetal (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {BWHITE}1 {YELLOW}e {GREEN}2{YELLOW}.{WHITE}")
-        l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv - leB))
-    elif((leB > 0) and ((l - leB) >= 0)):
+        l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv - leB)) #Atualizará somente a variável correta com base na seleção acima
+    elif((leB > 0) and ((l - leB) >= 0)): #Se precisar de leite e só tiver leite comum
         l -= leB
-    elif((leB > 0) and ((lv - leB) >= 0)):
+    elif((leB > 0) and ((lv - leB) >= 0)): #Se precisar de leite e só tiver leite vegetal
         lv -= leB
     
     print("")
@@ -442,6 +459,7 @@ def pix(v):
     Retorno:
     float: Valor que deverá ser devolvido como troco.
     """
+    #Variaveis de cores
     WHITE = '\033[37m'
     GREEN = '\033[92m'
     YELLOW = '\033[33m'
@@ -450,12 +468,12 @@ def pix(v):
     
     print(WHITE, end = "")
 
-    dif = round(rsp - v, 2)
+    dif = round(rsp - v, 2) #Diferença arredondada em duas casas
 
-    if (dif >= 0):
+    if (dif >= 0): 
         return dif
 
-    return pix(round(v - rsp, 2))
+    return pix(round(v - rsp, 2)) #Se a diferença não for maior ou igual a 0 -que simboliza que o valor inserido é maior ou igual o necessário-, chamará uma recursão
 
 def m1(c, a, g, l, lv, m, cc, Q_GELO, off, i = 1):
     """
@@ -479,23 +497,23 @@ def m1(c, a, g, l, lv, m, cc, Q_GELO, off, i = 1):
     Retorno:
     bool: True, caso tenha algum item disponível, se não, False.
     """
-    vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None
+    vf = lambda x, y, z = None: (y - x if (z == None) else z - y) if (x) else None #Caso x != 0, analizará z que se for != none responderá z-y, se não y-x. Isso é usado para mandar as diferenças para check.
 
-    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i + off)
+    space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(i + off) #Pega um item de fDict
 
     if (nB != None):
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
-        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
+        if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))): #Se a bebida puder ser produzida
             return True
         else:
-            return m1(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1)
-    else:
-        space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0)
+            return m1(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1) #Caso não posso, chama a recursão
+    else: #Se não acharmos nenhum disponível até a água (0), verificaremos esse 
+        space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0) #água
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
         if (bo and (gelada != 1 or (gelada == 1 and uG)) and (not leB or (leB and (uL or uLV)))):
-            return True
+            return True #Caso seja possível produzir a Água c/ Gelo
     
-    return False
+    return False #Caso nenhuma seja verdadeira, retornará false
 
 def fSpace(nM, r, s, f = False):
     """
@@ -513,7 +531,8 @@ def fSpace(nM, r, s, f = False):
     Retorna:
     int: Quantidade de espaços em branco.
     """
-    space2 = lambda y, f: (y//2) if (not f) else ((y//2) if (y % 2 == 0) else ((y//2) + 1))
+    space2 = lambda y, f: (y//2) if (not f) else ((y//2) if (y % 2 == 0) else ((y//2) + 1)) #Verifica se estamos nos tratando do espaço à direita.
+    #v Se nM == none manda para função acima os valores de espaço (total - o que estamos usando), se não, caso for maior igual a 10, manda os valores de espaço -1, se não, -2. Após todas essas considerações, os valores são retornados. 
     return (space2((s - r), f)) if (nM == None) else (space2((s - 2 - r), f)) if ((nM) >= 10) else (space2((s - 1 - r), f))
 
 def p1(n1, qL, SPACES, msg):
@@ -553,6 +572,7 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
 
     Retorno: None
     """
+    #Variáveis de cor
     WHITE = '\033[37m'
     RED = '\033[91m'
     GREEN = '\033[92m'
@@ -561,17 +581,19 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     CYAN = '\033[96m'
     BWHITE = '\033[97m'
 
-    SPACES = 55
+    SPACES = 55 #Espaços para o formatar o menu
     Q_GELO = 5 #Quantidade de gelo necessaria para o preparo das bebidas geladas
 
     limpa()
-    lch = lambda vl, v1, v2, v3, v4, v5: (v1 != vl and v2 != vl and v3 != vl and v4 != vl and v5 != vl)
+    lch = lambda vl, v1, v2, v3, v4, v5: (v1 != vl and v2 != vl and v3 != vl and v4 != vl and v5 != vl) 
+    #^ Função para verificar se valores entre duas variáveis são iguais, usada para 0 e none para saber se continuaremos o menu
 
-    soma = lambda var: 1 if (var != None) else 0
+    soma = lambda var: 1 if (var != None) else 0 #Usada para saber se temos algum ingrediente em falta
 
     next = 0
 
-    print(f"+{'-' * SPACES}+")
+    #Menu
+    print(f"+{'-' * SPACES}+") #Cabeçalho +----+
     print(f"| OPÇÃO |{' ' * 7}PRODUTO E VARIANTES*{' ' * 7}| PREÇO (un) |")
     print(f"+{'-' * SPACES}+")
     print(f"|{' ' * 23}*Legenda:{' ' * 23}|")
@@ -580,16 +602,17 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     print(f"|{' ' * 7}{BWHITE}(L){WHITE} -> Pode ser preparada com leite comum{' ' * 7}|")
     print(f"|{' ' * 6}{GREEN}(V){WHITE} -> Pode ser preparada com leite vegetal{' ' * 6}|")
     print(f"+{'-' * SPACES}+")
+    #Menu
 
-    id1, id2, id3, id4, id5 = menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off)
+    id1, id2, id3, id4, id5 = menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off) #Menu e os ids de cada item que o compõe
 
-    fIng = (id1 == id2 == id3 == id4 == id5 == None)
+    fIng = (id1 == id2 == id3 == id4 == id5 == None) #Variável usada para saber se o menu não está vazio
 
     if ((cup > 0) and (not fIng)):
         print(f"+{'-' * SPACES}+")
-        next = 5 if (id5 != None) else 4 if (id4 != None) else 3 if (id3 != None) else 2 if (id2 != None) else 1 if (id1 != None) else 0
+        next = 5 if (id5 != None) else 4 if (id4 != None) else 3 if (id3 != None) else 2 if (id2 != None) else 1 if (id1 != None) else 0 #Variável que dá o offset caso tenha
 
-        if (lch(0, id1, id2, id3, id4, id5) and lch(None, id1, id2, id3, id4, id5)): #none and 0
+        if (lch(0, id1, id2, id3, id4, id5) and lch(None, id1, id2, id3, id4, id5)):
             ck = m1(c, a, g, l, lv, m, cc, Q_GELO, id5)
             
             if (off >= 5):
@@ -608,13 +631,14 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     else:#
         fg = 0
 
+        #v Manutenção
         print(f"|{' ' * fSpace(None, 22, SPACES)}Aguardando Manutenção!{' ' * fSpace(None, 22, SPACES, True)}|")
         print(f"|{' ' * fSpace(None, 14, SPACES)}Falta de copo!{' ' * fSpace(None, 14, SPACES, True)}|") if (cup <= 0) else None
         print(f"|{' ' * fSpace(None, 22, SPACES)}Falta de ingredientes:{' ' * fSpace(None, 22, SPACES, True)}|") if (fIng) else None
         
-        _, __, ___, cBx, aBx, leBx, mBx, ccBx, ____ = fDict(-1)
+        _, __, ___, cBx, aBx, leBx, mBx, ccBx, ____ = fDict(-1) #Recebe os menores valores de cada ingrediente que são usados nas bebidas
         var = print(f"|{' ' * fSpace(None, 14, SPACES)}- Café Solúvel{' ' * fSpace(None, 14, SPACES, True)}|") if (c < cBx) else True
-        fg += soma(var)
+        fg += soma(var) #Realiza a soma para no final saber se precisará imprimir 'nenhum'
         var = print(f"|{' ' * fSpace(None, 6, SPACES)}- Água{' ' * fSpace(None, 6, SPACES, True)}|") if (a < aBx) else True
         fg += soma(var)
         var = print(f"|{' ' * fSpace(None, 6, SPACES)}- Gelo{' ' * fSpace(None, 6, SPACES, True)}|") if (g < Q_GELO) else True
@@ -641,38 +665,38 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
 
     q1 = Rinput(int, next + 3, "Digite a opção que deseja: ", f"Por favor, utilize números inteiros de 1-{next+3}.")
 
-    if (((q1 == next == 6) and (off < 5)) or ((q1 == next == 7) and (off >= 5))):
+    if (((q1 == next == 6) and (off < 5)) or ((q1 == next == 7) and (off >= 5))):  #Faz ir para próxima página
         off = id5
         programa(cup, c, a, g, l, lv, m, cc, off, fat)
-    elif ((off >= 5) and (((q1 == next) and (next != 7)) or ((q1 == next - 1) and (next == 7)))):
+    elif ((off >= 5) and (((q1 == next) and (next != 7)) or ((q1 == next - 1) and (next == 7)))): #Faz voltar uma página
         off -= 5
         programa(cup, c, a, g, l, lv, m, cc, off, fat)
-    elif (q1 == (next + 1)):
+    elif (q1 == (next + 1)): #Informação dos Produtos
         limpa()
         print(f"+{'-' * 55}+")
         print(f"|{' ' * fSpace(None, 9, 55)}{PURPLE}Produtos:{WHITE}{' ' * fSpace(None, 9, 55, True)}|")
         infoP(Q_GELO)
-    elif (q1 == (next + 2)):
+    elif (q1 == (next + 2)): #Informações Internas
         limpa()
         infoI(cup, c, a, g, l, lv, m, cc, fat)
-    elif (q1 == (next + 3)):
+    elif (q1 == (next + 3)): #Finaliza
         limpa()
         print(f"+{'-' * 55}+")
         print(f"|{' ' * fSpace(None, 12, 55)}{YELLOW}Finalizando!{WHITE}{' ' * fSpace(None, 12, 55, True)}|")
         infoI(cup, c, a, g, l, lv, m, cc, fat, True)
         exit()
-    else:
+    else: #Tenta vender
         limpa()
 
-        if (q1 == 1):
+        if (q1 == 1): #id1
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id1)
-        elif (q1 == 2):
+        elif (q1 == 2): #id2
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id2)
-        elif (q1 == 3):
+        elif (q1 == 3): #id3
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id3)
-        elif (q1 == 4):
+        elif (q1 == 4): #id4
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id4)
-        elif (q1 == 5):
+        elif (q1 == 5): #id5
             c, a, g, l, lv, m, cc, v = venda(c, a, g, l, lv, m, cc, Q_GELO, id5)
 
         cup -= 1
@@ -686,15 +710,17 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {GREEN}1 {YELLOW}e {RED}2{YELLOW}.{WHITE}")
         txt2 = f"|{' ' * fSpace(None, 12, 55)}{YELLOW}Finalizando!{WHITE}{' ' * fSpace(None, 12, 55, True)}|"
         (limpa(), print(f"+{'-' * 55}+"), print(txt2), infoI(cup, c, a, g, l, lv, m, cc, fat, True), exit()) if (rsp == 2) else None
-        off = 0
+        #^ Se a resposta for não, chamará limpa(), imprimirá 'finalizando!' e chamara infoI -informações internas- e sairá do programa por meio do exit() 
+        off = 0 #Sempre volta pra página inicial depois de vender
 
-    programa(cup, c, a, g, l, lv, m, cc, off, fat)
+    programa(cup, c, a, g, l, lv, m, cc, off, fat) #Recursão caso nenhuma seja chamada antes
 
     return
 
 def main():
-    programa(cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120)
+    programa(cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120) #Esse comando roda o sistema
     #         copos,    café,    água,     gelo,   leite, l. vegano, chá mate, calda
     #cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120
+    #^ Configuração para vender 1 de cada opção (incluindo todas permutações de quente/gelado, vegano/comum)
 
 main()
