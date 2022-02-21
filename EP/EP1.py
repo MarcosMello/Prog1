@@ -92,7 +92,7 @@ def fDict(n):
     
     #Caso adicione alguma bebida com valores inferiores a esse é necessário mudar
     #Não utilizar nomes de bebidas com mais que 22 caracteres
-    return -22, None, None, 50, 250, 50, 7, 10, None 
+    return -22, None, None, 50, 200, 50, 7, 10, None 
 
 def fNota(n):
     """
