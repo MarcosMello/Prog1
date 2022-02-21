@@ -155,12 +155,13 @@ def check(c = 0, a = 0, g = None, l = None, lv = None, m = 0, cc = 0):
 
     return (c >= 0 and a >= 0 and m >= 0 and cc >= 0), special(g), special(l), special(lv)
 
-def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, id3 = None, id4 = None, id5 = None, cnt = 0):
+def menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, id3 = None, id4 = None, id5 = None, cnt = 0):
     """
     Função responsável pelo menu, mantendo-os
     sempre atualizados com base na quatidade de ingredientes disponíveis.
 
     Parametros:
+    cup (int): Quantidade disponível de copos (un).
     c (int): Quantidade disponível de café solúvel em gramas (g).
     a (int): Quantidade disponível de água em mililitros (ml).
     g (int): Quantidade disponível de cubos de gelo (un).
@@ -197,7 +198,7 @@ def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, 
 
     space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(ic) 
 
-    if ((nB != None) and (cnt < 5)):
+    if ((cup > 0) and (nB != None) and (cnt < 5)):
         space += SPACES
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB)
 
@@ -212,8 +213,8 @@ def menu(c, a, g, l, lv, m, cc, Q_GELO, off = 0, i = 1, id1 = None, id2 = None, 
             print(valor)
             flag = True
         
-        return menu(c, a, g, l, lv, m, cc, Q_GELO, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt)
-    elif (cnt < 5):
+        return menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off, i + 1, uVar(id1, ic, flag), uVar(id2, ic, flag, id1), uVar(id3, ic, flag, id2), uVar(id4, ic, flag, id3), uVar(id5, ic, flag, id4), cnt)
+    elif ((cup > 0) and (cnt < 5)):
         space, nB, v, cB, aB, leB, mB, ccB, gelada = fDict(0)
         space += SPACES
         bo, uG, uL, uLV = check(c - cB, a - aB, vf(gelada, Q_GELO, g), vf(leB, l), vf(leB, lv), m - mB, cc-ccB) 
@@ -409,18 +410,17 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     print(f"+{'-' * (SPACE + 2)}+")
     print(f"| Você escolheu {fL('o', 'a', id)} {PURPLE}{nB}{WHITE} |")
     print(f"| {' ' * fSpace(v, 10+3, SPACE)}Preço: {GREEN}R$ {v:.2f}{WHITE}{' ' * fSpace(v, 10+3, SPACE, True)} |")
-    print(f"+{'-' * (SPACE + 2)}+")
+    print(f"+{'-' * (SPACE + 2)}+", end = "")
 
     if ((gelada > 1) and (g - Q_GELO >= 0)):#
-        txt = f"Deseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja\npreparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
+        txt = f"\nDeseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja\npreparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {RED}1 {YELLOW}e {CYAN}2{YELLOW}.{WHITE}")
-        print("")
         g -= Q_GELO if (rsp == 2) else 0
     elif (gelada == 1):
         g -= Q_GELO
 
     if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)):
-        txt = f"Deseja que seu {PURPLE}{nB}{WHITE} seja\npreparado com {BWHITE}Leite Comum (1) {WHITE}ou com\n{GREEN}Leite Vegetal (2){WHITE}? "
+        txt = f"\nDeseja que seu {PURPLE}{nB}{WHITE} seja\npreparado com {BWHITE}Leite Comum (1) {WHITE}ou com\n{GREEN}Leite Vegetal (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {BWHITE}1 {YELLOW}e {GREEN}2{YELLOW}.{WHITE}")
         l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv - leB))
     elif((leB > 0) and ((l - leB) >= 0)):
@@ -428,6 +428,8 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     elif((leB > 0) and ((lv - leB) >= 0)):
         lv -= leB
     
+    print("")
+
     return (c - cB), (a - aB), g, l, lv, (m - mB), (cc - ccB), v
 
 def pix(v):
@@ -565,6 +567,8 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     limpa()
     lch = lambda vl, v1, v2, v3, v4, v5: (v1 != vl and v2 != vl and v3 != vl and v4 != vl and v5 != vl)
 
+    soma = lambda var: 1 if (var != None) else 0
+
     next = 0
 
     print(f"+{'-' * SPACES}+")
@@ -577,7 +581,7 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
     print(f"|{' ' * 6}{GREEN}(V){WHITE} -> Pode ser preparada com leite vegetal{' ' * 6}|")
     print(f"+{'-' * SPACES}+")
 
-    id1, id2, id3, id4, id5 = menu(c, a, g, l, lv, m, cc, Q_GELO, off)
+    id1, id2, id3, id4, id5 = menu(cup, c, a, g, l, lv, m, cc, Q_GELO, off)
 
     fIng = (id1 == id2 == id3 == id4 == id5 == None)
 
@@ -602,18 +606,29 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
             print(f"|{' ' * 18}{next} - Página Anterior{' ' * 18}|")
             print(f"+{'-' * SPACES}+")
     else:#
+        fg = 0
+
         print(f"|{' ' * fSpace(None, 22, SPACES)}Aguardando Manutenção!{' ' * fSpace(None, 22, SPACES, True)}|")
         print(f"|{' ' * fSpace(None, 14, SPACES)}Falta de copo!{' ' * fSpace(None, 14, SPACES, True)}|") if (cup <= 0) else None
         print(f"|{' ' * fSpace(None, 22, SPACES)}Falta de ingredientes:{' ' * fSpace(None, 22, SPACES, True)}|") if (fIng) else None
         
         _, __, ___, cBx, aBx, leBx, mBx, ccBx, ____ = fDict(-1)
-        print(f"|{' ' * fSpace(None, 14, SPACES)}- Café Solúvel{' ' * fSpace(None, 14, SPACES, True)}|") if (c < cBx) else None
-        print(f"|{' ' * fSpace(None, 6, SPACES)}- Água{' ' * fSpace(None, 6, SPACES, True)}|") if (a < aBx) else None
-        print(f"|{' ' * fSpace(None, 6, SPACES)}- Gelo{' ' * fSpace(None, 6, SPACES, True)}|") if (g < Q_GELO) else None
-        print(f"|{' ' * fSpace(None, 13, SPACES)}- Leite Comum{' ' * fSpace(None, 13, SPACES, True)}|") if (l < leBx) else None
-        print(f"|{' ' * fSpace(None, 15, SPACES)}- Leite Vegetal{' ' * fSpace(None, 15, SPACES, True)}|") if (lv < leBx) else None
-        print(f"|{' ' * fSpace(None, 25, SPACES)}- Preparado para Chá-mate{' ' * fSpace(None, 25, SPACES, True)}|") if (m < mBx) else None
-        print(f"|{' ' * fSpace(None, 20, SPACES)}- Calda de Chocolate{' ' * fSpace(None, 20, SPACES, True)}|") if (cc < ccBx) else None
+        var = print(f"|{' ' * fSpace(None, 14, SPACES)}- Café Solúvel{' ' * fSpace(None, 14, SPACES, True)}|") if (c < cBx) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 6, SPACES)}- Água{' ' * fSpace(None, 6, SPACES, True)}|") if (a < aBx) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 6, SPACES)}- Gelo{' ' * fSpace(None, 6, SPACES, True)}|") if (g < Q_GELO) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 13, SPACES)}- Leite Comum{' ' * fSpace(None, 13, SPACES, True)}|") if (l < leBx) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 15, SPACES)}- Leite Vegetal{' ' * fSpace(None, 15, SPACES, True)}|") if (lv < leBx) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 25, SPACES)}- Preparado para Chá-mate{' ' * fSpace(None, 25, SPACES, True)}|") if (m < mBx) else True
+        fg += soma(var)
+        var = print(f"|{' ' * fSpace(None, 20, SPACES)}- Calda de Chocolate{' ' * fSpace(None, 20, SPACES, True)}|") if (cc < ccBx) else True
+        fg += soma(var)
+
+        print(f"|{' ' * fSpace(None, 8, SPACES)}- Nenhum{' ' * fSpace(None, 8, SPACES, True)}|") if (fg >= 7) else None
 
         print(f"+{'-' * SPACES}+")
 
@@ -663,7 +678,6 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
         cup -= 1
         fat += v
 
-        print("")
         qtroco = pix(v)
         print(f"\nTroco: {GREEN}R$ {qtroco:.2f}{WHITE}")
         (print(f"\nPegue seu troco: {GREEN}"), troco(qtroco), print(f"{WHITE}")) if (qtroco > 0) else print("")
