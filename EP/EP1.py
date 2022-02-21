@@ -414,11 +414,10 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     if ((gelada > 1) and (g - Q_GELO >= 0)):#
         txt = f"Deseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja\npreparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {RED}1 {YELLOW}e {CYAN}2{YELLOW}.{WHITE}")
+        print("")
         g -= Q_GELO if (rsp == 2) else 0
     elif (gelada == 1):
         g -= Q_GELO
-
-    print("")
 
     if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)):
         txt = f"Deseja que seu {PURPLE}{nB}{WHITE} seja\npreparado com {BWHITE}Leite Comum (1) {WHITE}ou com\n{GREEN}Leite Vegetal (2){WHITE}? "
