@@ -411,15 +411,17 @@ def venda(c, a, g, l, lv, m, cc, Q_GELO, id):
     print(f"| {' ' * fSpace(v, 10+3, SPACE)}Preço: {GREEN}R$ {v:.2f}{WHITE}{' ' * fSpace(v, 10+3, SPACE, True)} |")
     print(f"+{'-' * (SPACE + 2)}+")
 
-    if ((gelada > 1) and (g - Q_GELO >= 0)):
-        txt = f"Deseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja preparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
+    if ((gelada > 1) and (g - Q_GELO >= 0)):#
+        txt = f"Deseja que {fL('seu', 'sua', id)} {PURPLE}{nB}{WHITE} seja\npreparad{fL('o', 'a', id)} {RED}{fL('Quente', 'Tmp. Natural', id)} (1) {WHITE}ou {CYAN}Gelad{fL('o', 'a', id)} (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {RED}1 {YELLOW}e {CYAN}2{YELLOW}.{WHITE}")
         g -= Q_GELO if (rsp == 2) else 0
     elif (gelada == 1):
         g -= Q_GELO
-    
+
+    print("")
+
     if((leB > 0) and ((l - leB) >= 0) and ((lv - leB) >= 0)):
-        txt = f"Deseja que seu {PURPLE}{nB}{WHITE} seja preparado com {BWHITE}Leite Comum (1) {WHITE}ou {GREEN}Leite Vegetal (2){WHITE}? "
+        txt = f"Deseja que seu {PURPLE}{nB}{WHITE} seja\npreparado com {BWHITE}Leite Comum (1) {WHITE}ou com\n{GREEN}Leite Vegetal (2){WHITE}? "
         rsp = Rinput(int, 2, txt, f"{YELLOW}Por favor, utilize apenas os números {BWHITE}1 {YELLOW}e {GREEN}2{YELLOW}.{WHITE}")
         l, lv = ((l - leB), lv) if (rsp == 1) else (l, (lv - leB))
     elif((leB > 0) and ((l - leB) >= 0)):
@@ -679,9 +681,7 @@ def programa(cup, c, a, g, l, lv, m, cc, off = 0, fat = 0):
 
 def main():
     programa(cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120)
-    #cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120
-    #0,0,0,0,0,0,0,0
     #         copos,    café,    água,     gelo,   leite, l. vegano, chá mate, calda
-    #print(countN(5))
+    #cup = 17, c = 500, a = 3250, g = 45, l = 960, lv = 960, m = 14, cc = 120
 
 main()
