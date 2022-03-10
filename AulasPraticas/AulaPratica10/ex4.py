@@ -8,7 +8,7 @@ def divisores(n, L=[], i=1):
         return L
 
 def main():
-    L = [x for x in range(30) if len(divisores(x)) == 2]
+    L = [x for x in range(31) if len(divisores(x)) == 2]
     print(L)
 
 main()

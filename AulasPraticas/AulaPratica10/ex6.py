@@ -98,7 +98,7 @@ def jogadaComputador(tabuleiro, simboloComputador):
 # - Simbolo do jogador                                                            #
 # - Simbolo do computador                                                         #
 ###################################################################################
-
+#não deve imprimir nada em jogada computador e nem exit()
 
 
 def main():

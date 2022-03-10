@@ -7,7 +7,7 @@ def divisores(n, L=[], i=1):
     else:
         return L
 
-def listaPrimos(n, L = [], i = 1):
+def listaPrimos(n, L = [], i = 2):
     if len(L) != n:
         if len(divisores(i)) == 2:
             return listaPrimos(n, L + [i], i + 1)
