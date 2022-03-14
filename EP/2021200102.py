@@ -536,7 +536,10 @@ def programa(tabuleiro, simboloJogador, simboloComputador, turno, count = 0):
     if turno == simboloJogador: #Se for o turno do jogador
         pos = getPos(int, "Qual posição deseja marcar (1-9): ", ["Valor inválido.", "Você deve digitar", "um número inteiro entre 1 e 9."])
         if pos not in disp(tabuleiro): #Se a posição não estiver nos disponíveis
-            print("Posição já preenchida. Tente novamente!")
+            print(f"+{'-' * 37}+")
+            print(f"|{' ' * 8}Posição já preenchida.{' ' * 7}|")
+            print(f"|{' ' * 11}Tente novamente!{' ' * 10}|")
+            print(f"+{'-' * 37}+")
             programa(tabuleiro, simboloJogador, simboloComputador, turno, count) #Continua no mesmo turno
         else: #Se a posição estiver disponíveis
             tabuleiro[pos] = simboloJogador
