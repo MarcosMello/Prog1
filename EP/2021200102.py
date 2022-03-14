@@ -336,7 +336,7 @@ def indexR(l, simbolo, i = 0):
 
     Parâmetros:
     l (lista): Lista de onde será tirado o index.
-    simbolo: Item do qual faremos o index.
+    simbolo (str): Item do qual faremos o index.
     i (int): Variável contadora de recursão.
 
     Retorno:
