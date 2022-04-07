@@ -1,6 +1,8 @@
 # Prog1
-* Lixeira -> Arquivo para testes;
-* Sqrt-PrimeiraAula -> Avulso;
-* If-Apostila -> Exercício de exemplo da apostila;
-* AulaPratica1-Exemplos -> Exemplos da primeira aula pratica;
-* AulaPratica1-Exercicios -> Exercicios da primeira aula pratica;
+* Lixeiras -> Arquivos para testes;
+* Aulas Práticas -> Pasta com os arquivos de todas as aulas práticas;
+* EP -> Pasta com os exercícios programas;
+* ExemplosSol -> Exemplos de como automatizar os testes;
+* Listas -> Solução das listas que fiz;
+* mEPS -> Pasta com todos os mini exercícios programas;
+* Maratona -> Pasta com tudo que fiz para a maratona de programação até 07/04/21 (olhar novo repositório).
